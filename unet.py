@@ -37,12 +37,6 @@ def concatenate(link, layer):
     concat = torch.cat([crop, layer], 1)
     return concat
 
-def hellinger_distance(y_true, y_pred):
-    dif = torch.sqrt(y_true) - torch.sqrt(y_pred)
-    dif = torch.pow(dif, 2)
-    dif = torch.sqrt(torch.sum(dif)) / 1.4142135623730951
-    return dif
-
 class UNET(nn.Module):
     def __init__(self):
         super(UNET, self).__init__()
@@ -97,8 +91,4 @@ class UNET(nn.Module):
         out = F.sigmoid(out)
         return out
 
-if __name__ == "__main__":
-    net = UNET()
-    criterion = hellinger_distance
-    optimizer = torch.optim.Adam(net.parameters(), lr=1e-5)
 
