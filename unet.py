@@ -50,13 +50,22 @@ class UNET(nn.Module):
         self.down4 = down_layer(in_channel=64, out_channel=128, kernel_size=3, padding=0)
 
         # deconvolution path
-        self.up3 = nn.ConvTranspose2d(in_channels=128, out_channels=64, kernel_size=2, stride=2)
+        #self.up3 = nn.ConvTranspose2d(in_channels=128, out_channels=64, kernel_size=2, stride=2)
+        self.up3 = nn.Sequential(OrderedDict([
+            ("upsampling", nn.UpsamplingNearest2d(scale_factor=2)),
+            ("conv", nn.Conv2d(in_channels=128, out_channels=64, kernel_size=3, padding=1))]))
         self.up_conv3 = up_layer(in_channel=128, out_channel=64, kernel_size=3, padding=0)
 
-        self.up2 = nn.ConvTranspose2d(in_channels=64, out_channels=32, kernel_size=2, stride=2)
+        #self.up2 = nn.ConvTranspose2d(in_channels=64, out_channels=32, kernel_size=2, stride=2)
+        self.up2 = nn.Sequential(OrderedDict([
+            ("upsampling", nn.UpsamplingNearest2d(scale_factor=2)),
+            ("conv", nn.Conv2d(in_channels=64, out_channels=32, kernel_size=3, padding=1))]))
         self.up_conv2 = up_layer(in_channel=64, out_channel=32, kernel_size=3, padding=0)
 
-        self.up1 = nn.ConvTranspose2d(in_channels=32, out_channels=16, kernel_size=2, stride=2)
+        #self.up1 = nn.ConvTranspose2d(in_channels=32, out_channels=16, kernel_size=2, stride=2)
+        self.up1 = nn.Sequential(OrderedDict([
+            ("upsampling", nn.UpsamplingNearest2d(scale_factor=2)),
+            ("conv", nn.Conv2d(in_channels=32, out_channels=16, kernel_size=3, padding=1))]))
         self.up_conv1 = up_layer(in_channel=32, out_channel=16, kernel_size=3, padding=0)
 
         self.last = nn.Conv2d(in_channels=16, out_channels=1, kernel_size=1)

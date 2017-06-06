@@ -35,7 +35,7 @@ if __name__ == "__main__":
     if cuda:
         net = net.cuda()
     criterion = hellinger_distance
-    optimizer = torch.optim.Adamax(net.parameters(), lr=1e-5)
+    optimizer = torch.optim.Adamax(net.parameters(), lr=1e-3)
 
     print("preparing training data ...")
     train_set = create_patches("./imgs", "./masks")
