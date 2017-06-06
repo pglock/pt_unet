@@ -88,6 +88,8 @@ class UNET(nn.Module):
         out = self.up1(out)
         out = concatenate(link1, out)
         out = self.up_conv1(out)
+
+        out = self.last(out)
         out = F.sigmoid(out)
         return out
 
