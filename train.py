@@ -27,7 +27,11 @@ def train():
     train_set = create_patches("./imgs", "./masks")
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True)
     print("done ...")
+
+    test_set = create_patches("./test_imgs", "./test_masks", n_patches=10)
+    test_loader = torch.utils.data.DataLoader(test_set, batch_size=batch_size)
     for epoch in range(num_epochs):
+        net.train()
         for i, (images, masks) in enumerate(train_loader):
             images = Variable(images)
             masks = Variable(masks)
@@ -41,7 +45,19 @@ def train():
             loss.backward()
             optimizer.step()
 
-        print("Epoch {}, Loss: {}".format(epoch+1, loss.data[0]))
+        net.eval()
+        for images, masks in test_loader:
+            images = Variable(images)
+            masks = Variable(masks)
+            if cuda:
+                images = images.cuda()
+                masks = masks.cuda()
+
+            outputs = net(images)
+            val_loss = criterion(outputs, masks)
+
+        print("Epoch {}, Loss: {}, Validation Loss: {}".format(epoch+1, loss.data[0], val_loss.data[0]))
+
     return net
 
 def test(model):
